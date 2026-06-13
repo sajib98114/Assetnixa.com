@@ -1038,7 +1038,8 @@
     </div>
 
     <div class="reveal d1">
-      <form class="form" id="contactForm" novalidate>
+      <form class="form" id="contactForm" name="discovery" method="POST" data-netlify="true" netlify-honeypot="company_website" novalidate>
+        <input type="hidden" name="form-name" value="discovery">
         <div class="hp-field" aria-hidden="true"><label>Leave this field empty<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label></div>
         <div class="row2">
           <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" placeholder="Jane Smith" required></div>
@@ -1196,6 +1197,9 @@
     /* Honeypot: real visitors never see or fill this field — if it has a value, it's a bot. Stop silently. */
     var hp=form.querySelector('[name="company_website"]');
     if(hp&&hp.value){showSuccess();return;}
+
+    /* Send a copy to Netlify Forms so an email notification lands in your inbox */
+    try{ fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()}); }catch(e){}
 
     /* If Supabase isn't configured yet, just show the success state so the site still works. */
     if(SUPABASE_URL.indexOf('http')!==0){showSuccess();return;}
