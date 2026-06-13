@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assetnixa — From Fragmented Data to Operational Confidence</title>
+<meta name="description" content="Assetnixa delivers end-to-end GIS, asset management, and infrastructure analytics services and consultancy. We bridge construction delivery and operational performance through structured data, spatial integration, and lifecycle analytics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1521;          /* deepest navy */
+    --navy:#101D2B;         /* dark section bg */
+    --navy-2:#1B2C3D;       /* dark card / panel */
+    --slate:#3A4D5E;
+    --muted:#5C6E7E;
+    --line:#E4EAF0;
+    --line-dark:#2A3E52;
+    --paper:#FFFFFF;
+    --paper-2:#F5F8FB;
+    --gold:#E9A23B;         /* primary accent */
+    --gold-deep:#C9852A;
+    --gold-soft:#FBEFD8;
+    --ok:#2E9E6B;
+    --radius:16px;
+    --radius-sm:10px;
+    --maxw:1180px;
+    --shadow-sm:0 1px 3px rgba(11,26,43,.06),0 1px 2px rgba(11,26,43,.04);
+    --shadow-md:0 12px 32px -12px rgba(11,26,43,.18);
+    --shadow-lg:0 30px 60px -25px rgba(11,26,43,.35);
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Inter",system-ui,-apple-system,sans-serif;
+    color:var(--slate);
+    background:linear-gradient(180deg,#FAFCFE 0%,#EEF3F8 100%) fixed;
+    line-height:1.65;
+    font-size:17px;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* Subtle technical "blueprint" grid behind the light sections */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(14,34,54,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(14,34,54,.04) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask:radial-gradient(1200px 700px at 70% 0%,#000 0%,transparent 78%);
+    mask:radial-gradient(1200px 700px at 70% 0%,#000 0%,transparent 78%);
+  }
+  h1,h2,h3,h4,.display{font-family:"Sora",sans-serif;color:var(--ink);letter-spacing:-.02em;line-height:1.08}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  .eyebrow{
+    font-family:"Space Mono",monospace;text-transform:uppercase;letter-spacing:.18em;
+    font-size:12.5px;font-weight:700;color:var(--gold-deep);display:inline-flex;gap:10px;align-items:center;
+  }
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--gold);display:inline-block}
+  .section{padding:104px 0}
+  .section-head{max-width:720px;margin-bottom:54px}
+  .section-head h2{font-size:clamp(30px,4.2vw,46px);font-weight:800;margin:18px 0 14px}
+  .section-head p{font-size:18px;color:var(--muted)}
+  .center{text-align:center;margin-left:auto;margin-right:auto}
+
+  /* Buttons */
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;font-family:"Sora",sans-serif;font-weight:600;
+    font-size:15.5px;padding:15px 26px;border-radius:12px;cursor:pointer;border:1.5px solid transparent;
+    transition:transform .25s var(--ease),background .25s,border-color .25s,box-shadow .25s,color .25s;white-space:nowrap;
+  }
+  .btn svg{width:17px;height:17px}
+  .btn-gold{background:var(--gold);color:var(--ink);box-shadow:0 8px 22px -8px rgba(233,162,59,.6)}
+  .btn-gold:hover{background:var(--gold-deep);color:#fff;transform:translateY(-2px)}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-dark:hover{background:var(--navy-2);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .btn-ghost-light{background:transparent;border-color:rgba(255,255,255,.25);color:#fff}
+  .btn-ghost-light:hover{border-color:#fff;background:rgba(255,255,255,.06)}
+
+  /* ---------- Header ---------- */
+  header{position:sticky;top:0;z-index:80;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);
+    border-bottom:1px solid transparent;transition:border-color .3s,box-shadow .3s,background .3s}
+  header.scrolled{border-color:var(--line);box-shadow:var(--shadow-sm)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:"Sora",sans-serif;font-weight:800;font-size:22.5px;color:var(--ink);letter-spacing:-.03em}
+  .brand .mark{width:39px;height:39px;flex:none;filter:drop-shadow(0 3px 6px rgba(11,26,43,.14))}
+  .nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-links a,.nav-links button{
+    font-family:"Sora",sans-serif;font-weight:500;font-size:15.5px;color:var(--slate);
+    padding:10px 14px;border-radius:9px;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s,background .2s
+  }
+  .nav-links a:hover,.nav-links button:hover{color:var(--ink);background:var(--paper-2)}
+  .nav-links .caret{width:13px;height:13px;transition:transform .3s}
+  .menu-toggle{display:none;background:none;border:none;cursor:pointer;width:42px;height:42px;border-radius:10px;color:var(--ink)}
+  .menu-toggle:hover{background:var(--paper-2)}
+  .menu-toggle svg{width:24px;height:24px;margin:auto}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;overflow:hidden;background:
+    radial-gradient(1200px 620px at 86% -12%,rgba(233,162,59,.12),transparent 58%),
+    linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0) 70%)}
+  .hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding-top:96px;padding-bottom:100px}
+  .hero h1{font-size:clamp(32px,4.6vw,46px);font-weight:800;margin:22px 0 22px;line-height:1.14}
+  .hero h1 .grad{background:linear-gradient(100deg,var(--gold),var(--gold-deep));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{font-size:20px;color:var(--muted);max-width:520px;margin-bottom:26px}
+  .hero-stages{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:0 0 32px}
+  .hero-stages .st{display:inline-flex;align-items:center;gap:9px;padding:9px 15px;border:1px solid var(--line);border-radius:999px;background:#fff;box-shadow:var(--shadow-sm);font-family:"Sora",sans-serif;font-weight:600;font-size:14px;color:var(--ink)}
+  .hero-stages .st i{width:8px;height:8px;border-radius:50%;background:var(--gold)}
+  .hero-stages .arrow{display:inline-flex;color:var(--gold-deep)}
+  .hero-stages .arrow svg{width:18px;height:18px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-art{position:relative;aspect-ratio:1/1;max-width:480px;margin-left:auto;width:100%}
+
+  /* radar */
+  .radar{position:absolute;inset:0}
+  .radar circle,.radar line{fill:none;stroke:var(--line);stroke-width:1}
+  .radar .ax{stroke:#EAEFF4}
+  .sweep{transform-origin:50% 50%;animation:spin 7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .blip{fill:var(--gold);opacity:0;animation:blip 7s linear infinite}
+  .blip.b2{animation-delay:2.3s}
+  .blip.b3{animation-delay:4.6s}
+  @keyframes blip{0%,8%{opacity:1;r:6px}30%{opacity:.15;r:9px}100%{opacity:0;r:9px}}
+  .node{fill:var(--ink)}
+  .pulse{transform-origin:center;animation:pulse 3.5s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+  /* ---------- Trust band ---------- */
+  .band-dark{background:var(--navy);color:#fff;position:relative}
+  .band-dark::after{content:"";position:absolute;inset:0;background:
+    radial-gradient(700px 300px at 100% 0%,rgba(233,162,59,.10),transparent 70%);pointer-events:none}
+  /* shared faint grid on dark sections */
+  .band-dark,.case-band,.contact-band{
+    background-image:
+      linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),
+      linear-gradient(180deg,#16273A 0%,#0E1A28 100%);
+    background-size:54px 54px,54px 54px,100% 100%;
+  }
+  .trust{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding:46px 0;position:relative;z-index:1}
+  .trust p{font-size:19px;color:#D7E0E8;max-width:430px;font-weight:500}
+  .trust-ic{display:flex;gap:34px;flex-wrap:wrap}
+  .trust-ic .ti{display:flex;align-items:center;gap:11px;font-family:"Sora",sans-serif;font-weight:600;font-size:15.5px;color:#fff}
+  .trust-ic .ti svg{width:22px;height:22px;color:var(--gold)}
+
+  /* ---------- Stats ---------- */
+  .stats{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:58px 24px}
+  .stat{text-align:center}
+  .stat .num{font-family:"Sora",sans-serif;font-weight:800;font-size:clamp(34px,4.5vw,50px);color:var(--ink);letter-spacing:-.03em}
+  .stat .num span{color:var(--gold-deep)}
+  .stat .lbl{font-size:14.5px;color:var(--muted);margin-top:6px;font-weight:500}
+
+  /* Delivery highlights */
+  .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+  .hl{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .hl:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:#D6E0EA}
+  .hl-ic{width:52px;height:52px;flex:none;border-radius:13px;background:var(--gold-soft);color:var(--gold-deep);display:grid;place-items:center}
+  .hl-ic svg{width:26px;height:26px}
+  .hl h3{font-size:19px;font-weight:700;margin-bottom:7px}
+  .hl p{font-size:15px;color:var(--muted)}
+
+  /* ---------- Problem cards ---------- */
+  .prob-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .prob{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:34px 30px;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .prob:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:#D6E0EA}
+  .prob .ic{width:50px;height:50px;border-radius:13px;background:var(--paper-2);display:grid;place-items:center;color:var(--slate);margin-bottom:22px;border:1px solid var(--line)}
+  .prob .ic svg{width:24px;height:24px}
+  .prob h3{font-size:20px;font-weight:700;margin-bottom:10px}
+  .prob p{font-size:15.5px;color:var(--muted)}
+
+  /* ---------- Capabilities ---------- */
+  .cap-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px}
+  .cap-filters button{font-family:"Sora",sans-serif;font-weight:500;font-size:14px;padding:9px 17px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--slate);cursor:pointer;transition:all .2s}
+  .cap-filters button:hover{border-color:var(--gold)}
+  .cap-filters button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .cap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:26px}
+  .cap{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .cap:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:#D6E0EA}
+  .cap-viz{background:#142A41;padding:22px;height:210px;display:grid;place-items:center;border-bottom:1px solid var(--line-dark)}
+  .cap-viz svg{width:100%;height:100%;max-height:172px}
+  .cap[id^="svc-"]{scroll-margin-top:96px}
+  .cap[id]:target{border-color:var(--gold);box-shadow:0 0 0 3px rgba(233,162,59,.25),var(--shadow-md)}
+  .cap-body{padding:28px 30px 30px}
+  .cap-body h3{font-size:20px;font-weight:700;margin-bottom:8px}
+  .cap-tag{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;line-height:1.5;display:block;margin-bottom:18px}
+  .cap-sub{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:18px 0 8px}
+  .cap p.ch{font-size:14.8px;color:var(--muted)}
+  .cap ol{list-style:none;counter-reset:s}
+  .cap ol li{counter-increment:s;position:relative;padding-left:32px;font-size:14.8px;color:var(--slate);margin-bottom:7px}
+  .cap ol li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:0;font-family:"Space Mono",monospace;font-size:11px;font-weight:700;color:var(--gold-deep)}
+  .cap ul{list-style:none}
+  .cap ul li{position:relative;padding-left:28px;font-size:14.8px;color:var(--slate);margin-bottom:7px}
+  .cap ul li::before{content:"";position:absolute;left:0;top:7px;width:16px;height:16px;background:var(--ok);border-radius:50%;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/12px no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/12px no-repeat}
+  .cap .tagline{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);font-style:italic;color:var(--gold-deep);font-size:14.5px;font-weight:500}
+
+  /* ---------- Why ---------- */
+  .why{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:start}
+  .why-list{display:flex;flex-direction:column;gap:26px}
+  .why-item{display:flex;gap:18px}
+  .why-item .ic{width:42px;height:42px;flex:none;border-radius:11px;border:1.5px solid var(--gold);color:var(--gold-deep);display:grid;place-items:center}
+  .why-item .ic svg{width:20px;height:20px}
+  .why-item h4{font-size:18px;font-weight:700;margin-bottom:5px}
+  .why-item p{font-size:15px;color:var(--muted)}
+  .quote-card{background:var(--ink);color:#fff;border-radius:20px;padding:44px 40px;position:relative;overflow:hidden;align-self:stretch;display:flex;flex-direction:column;justify-content:center}
+  .quote-card::before{content:"";position:absolute;top:-40px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(233,162,59,.16),transparent 70%)}
+  .quote-card .q{font-family:"Sora",sans-serif;font-weight:700;font-size:27px;line-height:1.25;color:#fff;letter-spacing:-.02em;position:relative}
+  .quote-card hr{border:none;border-top:1px solid var(--line-dark);margin:28px 0}
+  .quote-card .by{display:flex;align-items:center;gap:14px;position:relative}
+  .quote-card .av{width:46px;height:46px;border-radius:11px;background:var(--gold);color:var(--ink);display:grid;place-items:center;font-family:"Sora",sans-serif;font-weight:800;font-size:20px}
+  .quote-card .by b{display:block;font-family:"Sora",sans-serif;font-size:15px;color:#fff}
+  .quote-card .by small{color:#9FB2C2;font-size:13px}
+
+  /* ---------- Difference ---------- */
+  .diff{background:#fff}
+  .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+  .diff-col{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:34px 32px}
+  .diff-col.them{background:transparent;border-style:dashed}
+  .diff-col h4{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:20px}
+  .diff-col.them h4{color:var(--muted)}
+  .diff-col.us h4{color:var(--gold-deep)}
+  .diff-col.us{border-color:var(--ink);box-shadow:var(--shadow-md)}
+  .diff-col ul{list-style:none}
+  .diff-col li{position:relative;padding-left:30px;font-size:15.5px;margin-bottom:13px;color:var(--slate)}
+  .diff-col.them li{color:var(--muted)}
+  .diff-col li svg{position:absolute;left:0;top:3px;width:18px;height:18px}
+
+  /* ---------- Industries ---------- */
+  .ind-grid{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;max-width:920px;margin:0 auto}
+  .ind{display:flex;align-items:center;gap:13px;padding:18px 26px;border:1px solid var(--line);border-radius:14px;background:#fff;font-family:"Sora",sans-serif;font-weight:600;font-size:16px;color:var(--ink);transition:all .25s var(--ease)}
+  .ind:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:var(--shadow-sm)}
+  .ind svg{width:22px;height:22px;color:var(--gold-deep)}
+
+  /* ---------- Case studies ---------- */
+  .case-band{background-color:var(--navy);color:#fff}
+  .case-band .section-head h2{color:#fff}
+  .case-band .section-head p{color:#A9BAC8}
+  .case-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .case{background:var(--navy-2);border:1px solid var(--line-dark);border-radius:var(--radius);padding:28px 26px;transition:transform .3s var(--ease),border-color .3s}
+  .case:hover{transform:translateY(-4px);border-color:var(--gold)}
+  .case-tags{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+  .case-tags span{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:5px 11px;border-radius:6px;background:rgba(233,162,59,.14);color:var(--gold)}
+  .case h3{font-size:21px;font-weight:700;color:#fff;line-height:1.22;margin-bottom:12px}
+  .case .client{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8DA1B2;margin-bottom:18px}
+  .case-sub{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:16px 0 7px}
+  .case p{font-size:14.6px;color:#BDCAD6}
+  .case ul{list-style:none;margin-top:4px}
+  .case ul li{position:relative;padding-left:24px;font-size:14.3px;color:#D2DCE5;margin-bottom:6px}
+  .case ul li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;background:var(--gold);border-radius:50%;
+    -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/10px no-repeat;
+    mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/10px no-repeat}
+
+  /* ---------- Insights ---------- */
+  .ins-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .ins{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 28px;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;display:flex;flex-direction:column}
+  .ins:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);border-color:#D6E0EA}
+  .ins .meta{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-deep);font-weight:700;margin-bottom:14px}
+  .ins h3{font-size:19px;font-weight:700;line-height:1.28;margin-bottom:12px}
+  .ins p{font-size:14.6px;color:var(--muted);flex:1;margin-bottom:18px}
+  .ins .read{font-family:"Sora",sans-serif;font-weight:600;font-size:13.5px;color:var(--ink);display:inline-flex;align-items:center;gap:7px}
+  .ins:hover .read{color:var(--gold-deep)}
+  .ins .read svg{width:15px;height:15px;transition:transform .25s}
+  .ins:hover .read svg{transform:translateX(4px)}
+
+  /* ---------- FAQ ---------- */
+  .faq-wrap{max-width:820px;margin:0 auto}
+  .faq{border-bottom:1px solid var(--line)}
+  .faq button{width:100%;background:none;border:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 4px;text-align:left;font-family:"Sora",sans-serif;font-weight:600;font-size:18px;color:var(--ink)}
+  .faq .pm{width:26px;height:26px;flex:none;position:relative}
+  .faq .pm::before,.faq .pm::after{content:"";position:absolute;background:var(--gold-deep);border-radius:2px;transition:transform .3s var(--ease)}
+  .faq .pm::before{top:12px;left:4px;right:4px;height:2px}
+  .faq .pm::after{left:12px;top:4px;bottom:4px;width:2px}
+  .faq[aria-expanded="true"] .pm::after{transform:rotate(90deg);opacity:0}
+  .faq .ans{max-height:0;overflow:hidden;transition:max-height .35s var(--ease)}
+  .faq .ans p{padding:0 4px 26px;font-size:15.5px;color:var(--muted);max-width:680px}
+
+  /* ---------- Contact ---------- */
+  .contact-band{background-color:var(--navy);color:#fff;position:relative;overflow:hidden}
+  .contact-band::before{content:"";position:absolute;left:-120px;bottom:-120px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(233,162,59,.10),transparent 70%)}
+  .contact{display:grid;grid-template-columns:.95fr 1.05fr;gap:56px;position:relative;z-index:1}
+  .contact-left .eyebrow{color:var(--gold)}
+  .contact-left h2{color:#fff;font-size:clamp(30px,4vw,42px);font-weight:800;margin:18px 0 18px}
+  .contact-left>p{color:#B6C5D2;font-size:17px;margin-bottom:30px;max-width:420px}
+  .promise{display:flex;flex-direction:column;gap:16px;margin-bottom:34px}
+  .promise li{list-style:none;display:flex;gap:13px;align-items:center;font-size:15px;color:#D7E0E8}
+  .promise li svg{width:20px;height:20px;color:var(--gold);flex:none}
+  .contact-info{display:flex;flex-direction:column;gap:14px;padding-top:28px;border-top:1px solid var(--line-dark)}
+  .contact-info a{display:flex;align-items:center;gap:12px;color:#D7E0E8;font-size:15.5px}
+  .contact-info a svg{width:19px;height:19px;color:var(--gold)}
+  .contact-info a:hover{color:#fff}
+
+  .form{background:#fff;border-radius:20px;padding:36px 34px;box-shadow:var(--shadow-lg)}
+  .form label{display:block;font-family:"Sora",sans-serif;font-weight:600;font-size:13px;color:var(--ink);margin-bottom:9px;text-transform:uppercase;letter-spacing:.05em}
+  .field{margin-bottom:22px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .form input,.form textarea{width:100%;font-family:"Inter",sans-serif;font-size:15.5px;color:var(--ink);padding:13px 15px;border:1.5px solid var(--line);border-radius:11px;background:var(--paper-2);transition:border-color .2s,background .2s}
+  .form input:focus,.form textarea:focus{outline:none;border-color:var(--gold);background:#fff}
+  .form textarea{min-height:120px;resize:vertical}
+  .chips{display:flex;flex-wrap:wrap;gap:9px}
+  .chips label{display:inline-flex;align-items:center;gap:8px;font-family:"Inter",sans-serif;text-transform:none;letter-spacing:0;font-weight:500;font-size:13.5px;color:var(--slate);
+    padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;cursor:pointer;margin:0;transition:all .2s;background:#fff}
+  .chips input{display:none}
+  .chips label:hover{border-color:var(--gold)}
+  .chips input:checked+span{color:var(--ink)}
+  .chips label:has(input:checked){background:var(--gold-soft);border-color:var(--gold)}
+  .form .btn{width:100%;justify-content:center;padding:16px;font-size:16px;margin-top:6px}
+  .form .note{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+  .form-err{display:none;text-align:center;font-size:13.5px;color:#C0392B;margin-top:12px}
+  .form-success{display:none;text-align:center;padding:30px 10px}
+  .form-success.show{display:block}
+  .form-success .ok-ic{width:64px;height:64px;border-radius:50%;background:var(--gold-soft);color:var(--gold-deep);display:grid;place-items:center;margin:0 auto 20px}
+  .form-success .ok-ic svg{width:32px;height:32px}
+  .form-success h3{font-size:23px;margin-bottom:10px}
+  .form-success p{color:var(--muted);font-size:15.5px}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--ink);color:#9FB2C2;padding:64px 0 34px}
+  .foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:40px;border-bottom:1px solid var(--line-dark)}
+  .foot-brand{max-width:340px}
+  .foot-brand .brand{color:#fff;margin-bottom:14px}
+  .foot-brand p{font-size:14.5px;color:#8DA1B2}
+  .foot-cols{display:flex;gap:64px;flex-wrap:wrap}
+  .foot-col h5{font-family:"Sora",sans-serif;font-size:13px;color:#fff;text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+  .foot-col a{display:block;font-size:14.5px;color:#9FB2C2;margin-bottom:11px;transition:color .2s}
+  .foot-col a:hover{color:var(--gold)}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:26px;font-size:13.5px;color:#7C90A2}
+  .foot-bot a{color:#9FB2C2}
+  .foot-bot a:hover{color:var(--gold)}
+
+  /* back to top */
+  .totop{position:fixed;right:24px;bottom:24px;width:48px;height:48px;border-radius:50%;background:var(--ink);color:#fff;border:none;cursor:pointer;display:grid;place-items:center;box-shadow:var(--shadow-md);opacity:0;visibility:hidden;transform:translateY(12px);transition:all .3s var(--ease);z-index:70}
+  .totop.show{opacity:1;visibility:visible;transform:translateY(0)}
+  .totop:hover{background:var(--gold);color:var(--ink)}
+  .totop svg{width:20px;height:20px}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+  /* mobile menu panel */
+  .mobile-panel{position:fixed;inset:0;background:#fff;z-index:200;transform:translateX(100%);transition:transform .35s var(--ease);display:flex;flex-direction:column;padding:24px}
+  .mobile-panel.open{transform:none}
+  .mobile-panel .mp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+  .mobile-panel nav a{display:block;font-family:"Sora",sans-serif;font-weight:600;font-size:22px;color:var(--ink);padding:16px 0;border-bottom:1px solid var(--line)}
+  .mobile-panel .btn{margin-top:24px;justify-content:center}
+  .mp-close{background:none;border:none;cursor:pointer;width:44px;height:44px;color:var(--ink)}
+  .mp-close svg{width:26px;height:26px;margin:auto}
+
+  /* ---------- Responsive ---------- */
+  @media(max-width:1080px) and (min-width:961px){
+    .case-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:960px){
+    .nav-links,.nav-cta .btn{display:none}
+    .menu-toggle{display:grid}
+    .hero .wrap{grid-template-columns:1fr;padding-top:60px;padding-bottom:64px}
+    .hero-art{max-width:360px;margin:0 auto;order:-1}
+    .why,.contact{grid-template-columns:1fr;gap:40px}
+    .trust{grid-template-columns:1fr;gap:26px}
+    .stats .wrap{grid-template-columns:1fr 1fr;gap:34px 20px}
+    .cap-grid,.case-grid,.diff-grid{grid-template-columns:1fr}
+    .prob-grid,.ins-grid,.hl-grid{grid-template-columns:1fr}
+    .section{padding:74px 0}
+  }
+  @media(max-width:560px){
+    body{font-size:16px}
+    .row2{grid-template-columns:1fr}
+    .form,.quote-card{padding:30px 24px}
+    .stat .num{font-size:38px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;scroll-behavior:auto !important}
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="top">
+  <div class="wrap nav">
+    <a href="#top" class="brand" aria-label="Assetnixa home">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>
+      Assetnixa
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#top">Home</a></li>
+      <li><a href="#capabilities">Services</a></li>
+      <li><a href="#industries">Industries</a></li>
+      <li><a href="#cases">Case Studies</a></li>
+      <li><a href="#insights">Insights</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-gold">Book a Free Discovery Call</a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile panel -->
+<div class="mobile-panel" id="mobilePanel">
+  <div class="mp-head">
+    <span class="brand"><svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>Assetnixa</span>
+    <button class="mp-close" id="mpClose" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+  <nav>
+    <a href="#top">Home</a>
+    <a href="#capabilities">Services</a>
+    <a href="#industries">Industries</a>
+    <a href="#cases">Case Studies</a>
+    <a href="#insights">Insights</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a href="#contact" class="btn btn-gold">Book a Free Discovery Call</a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy reveal">
+      <span class="eyebrow">Turning asset data into decisions you can trust</span>
+      <h1>From Design to<br><span class="grad">Operational Intelligence</span></h1>
+      <p class="lead">End-to-end GIS, asset management, and infrastructure analytics services and consultancy — enabling lifecycle-ready infrastructure systems.</p>
+      <div class="hero-stages">
+        <span class="st"><i></i>Design</span>
+        <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+        <span class="st"><i></i>Construction</span>
+        <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+        <span class="st"><i></i>Operational Excellence</span>
+      </div>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-dark">Book a Free Discovery Call
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+        <a href="#capabilities" class="btn btn-ghost">Explore Services</a>
+      </div>
+    </div>
+    <div class="hero-art reveal d1">
+      <svg class="radar" viewBox="0 0 400 400" aria-hidden="true">
+        <circle cx="200" cy="200" r="190"/><circle cx="200" cy="200" r="140"/><circle cx="200" cy="200" r="92"/><circle cx="200" cy="200" r="46"/>
+        <line class="ax" x1="200" y1="10" x2="200" y2="390"/><line class="ax" x1="10" y1="200" x2="390" y2="200"/>
+        <line class="ax" x1="66" y1="66" x2="334" y2="334"/><line class="ax" x1="334" y1="66" x2="66" y2="334"/>
+        <g class="sweep"><line x1="200" y1="200" x2="200" y2="20" stroke="#E9A23B" stroke-width="2"/>
+          <path d="M200 200 L200 20 A180 180 0 0 1 290 44 Z" fill="rgba(233,162,59,.10)"/></g>
+        <circle class="blip" cx="280" cy="130" r="6"/><circle class="blip b2" cx="140" cy="270" r="6"/><circle class="blip b3" cx="250" cy="280" r="6"/>
+        <g class="pulse"><circle class="node" cx="120" cy="150" r="4"/><circle class="node" cx="290" cy="240" r="4"/><circle class="node" cx="200" cy="110" r="4"/></g>
+        <line x1="120" y1="150" x2="200" y2="110" stroke="#C7D4DF" stroke-width="1"/><line x1="200" y1="110" x2="290" y2="240" stroke="#C7D4DF" stroke-width="1"/>
+        <circle cx="200" cy="200" r="6" fill="#0B1A2B"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST BAND ============ -->
+<section class="band-dark">
+  <div class="wrap trust">
+    <p class="reveal">Supporting infrastructure owners across delivery and operations through data-driven asset intelligence.</p>
+    <div class="trust-ic reveal d1">
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>GIS</span>
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>Asset Management</span>
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>Digital Engineering</span>
+      <span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 5-7"/></svg>Lifecycle Analytics</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STATS ============ -->
+<section class="stats">
+  <div class="wrap">
+    <div class="stat reveal"><div class="num" data-count="30" data-suffix="+">0</div><div class="lbl">Infrastructure projects supported</div></div>
+    <div class="stat reveal d1"><div class="num" data-count="98.35" data-suffix="%" data-decimals="2">0</div><div class="lbl">Handover data accuracy delivered</div></div>
+    <div class="stat reveal d2"><div class="num" data-count="30" data-suffix="%">0</div><div class="lbl">Average reduction in lookup time</div></div>
+    <div class="stat reveal d3"><div class="num" data-count="15" data-suffix=" yrs">0</div><div class="lbl">Years of industry expertise</div></div>
+  </div>
+</section>
+
+<!-- ============ DELIVERY HIGHLIGHTS ============ -->
+<section class="section" style="padding-top:84px;padding-bottom:84px">
+  <div class="wrap">
+    <div class="hl-grid">
+      <div class="hl reveal">
+        <div class="hl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div>
+        <div>
+          <h3>Onshore &amp; Offshore Support</h3>
+          <p>Flexible delivery through onshore and offshore teams — scaled to your project, budget, and timezone.</p>
+        </div>
+      </div>
+      <div class="hl reveal d1">
+        <div class="hl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div>
+          <h3>30+ Skilled Consultants</h3>
+          <p>A team of highly skilled and experienced consultants spanning GIS, asset data, and infrastructure engineering.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROBLEM ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">The real problem</span>
+      <h2>Infrastructure data is not the problem&nbsp;— its usability is.</h2>
+      <p>Most owners are rich in data and poor in answers. We close the gap between what's recorded and what's usable.</p>
+    </div>
+    <div class="prob-grid">
+      <div class="prob reveal">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+        <h3>Fragmented asset information across systems</h3>
+        <p>Silos prevent a unified view of asset health, leading to reactive maintenance and duplicated effort.</p>
+      </div>
+      <div class="prob reveal d1">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17 9 8l4 5 3-4 4 8"/><path d="M3 21h18"/></svg></div>
+        <h3>Weak transition from construction to operations</h3>
+        <p>Valuable engineering data is lost or downgraded during handover — and the cost surfaces years later.</p>
+      </div>
+      <div class="prob reveal d2">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3>Lack of GIS-linked decision intelligence</h3>
+        <p>Without spatial context, operational planning stays theoretical instead of grounded in the real network.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BRIDGE BAND ============ -->
+<section class="band-dark">
+  <div class="wrap" style="padding:90px 24px;text-align:center;position:relative;z-index:1">
+    <div class="reveal" style="max-width:820px;margin:0 auto">
+      <span class="eyebrow" style="color:var(--gold)">What we deliver</span>
+      <h2 style="color:#fff;font-size:clamp(30px,4.5vw,48px);font-weight:800;margin:20px 0 20px">Turning asset data into <span style="color:var(--gold)">operational intelligence</span></h2>
+      <p style="color:#C0CDD9;font-size:19px;max-width:680px;margin:0 auto">Assetnixa bridges the gap between construction delivery and operational asset performance through structured data, GIS integration, and lifecycle analytics.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CAPABILITIES ============ -->
+<section class="section" id="capabilities">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">What we do</span>
+      <h2>Our Capabilities</h2>
+      <p>Eight connected services that move your assets from raw records to reliable, field-ready intelligence.</p>
+    </div>
+
+    <div class="cap-filters reveal" id="capFilters">
+      <button class="active" data-filter="all">All capabilities</button>
+      <button data-filter="data">Data &amp; Governance</button>
+      <button data-filter="spatial">Spatial &amp; Lifecycle</button>
+      <button data-filter="build">Systems &amp; Delivery</button>
+    </div>
+
+    <div class="cap-grid" id="capGrid">
+
+      <!-- 1 Asset Information Management -->
+      <article id="svc-asset-information" class="cap reveal" data-cat="data">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <g stroke="#5C7E9A" stroke-width="1.5">
+              <rect x="14" y="18" width="64" height="22" rx="4" fill="#1E3A55"/><rect x="14" y="50" width="64" height="22" rx="4" fill="#1E3A55"/>
+              <rect x="14" y="82" width="64" height="22" rx="4" fill="#1E3A55"/><rect x="14" y="114" width="64" height="22" rx="4" fill="#1E3A55"/>
+            </g>
+            <g stroke="#E9A23B" stroke-width="1.4" stroke-dasharray="3 3">
+              <path d="M78 29 L150 75"/><path d="M78 61 L150 75"/><path d="M78 93 L150 75"/><path d="M78 125 L150 75"/>
+            </g>
+            <rect x="150" y="63" width="26" height="26" rx="5" fill="#E9A23B"/>
+            <path d="M176 76 H210" stroke="#E9A23B" stroke-width="1.6"/><path d="M204 70 L210 76 L204 82" stroke="#E9A23B" stroke-width="1.6" fill="none"/>
+            <rect x="210" y="42" width="92" height="66" rx="6" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.5"/>
+            <text x="256" y="78" fill="#E9A23B" font-family="monospace" font-size="11" text-anchor="middle">ASSET REGISTER</text>
+            <text x="160" y="142" fill="#A8BDCE" font-family="monospace" font-size="9" text-anchor="middle">FRAGMENTED → UNIFIED</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Asset Information Management</h3>
+          <span class="cap-tag">Turning fragmented asset data into a single source of operational truth</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Asset records live in disconnected systems, so no one can trust a single view of asset health.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Data discovery &amp; audit</li><li>Master data model</li><li>Register consolidation</li><li>Validation &amp; sign-off</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Single source of asset truth</li><li>Improved operational readiness</li><li>Reduced rework during handover</li></ul>
+          <p class="tagline">Build reliable asset information from day one.</p>
+        </div>
+      </article>
+
+      <!-- 2 GIS & Spatial -->
+      <article id="svc-gis-spatial" class="cap reveal d1" data-cat="spatial">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <g stroke="#5C7E9A" stroke-width="1.2"><path d="M40 40 L160 20 L280 50 M40 110 L150 130 L280 100 M40 40 L40 110 M160 20 L150 130 M280 50 L280 100"/></g>
+            <g stroke="#E9A23B" stroke-width="1.4">
+              <path d="M90 70 L160 50 L230 80 M160 50 L150 95 M90 70 L150 95 L230 80"/>
+            </g>
+            <circle cx="90" cy="70" r="6" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.6"/>
+            <circle cx="160" cy="50" r="8" fill="#E9A23B"/>
+            <circle cx="230" cy="80" r="6" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.6"/>
+            <circle cx="150" cy="95" r="6" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.6"/>
+            <text x="160" y="142" fill="#A8BDCE" font-family="monospace" font-size="9" text-anchor="middle">ASSET NODES · LINKED</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>GIS &amp; Spatial Integration</h3>
+          <span class="cap-tag">Connecting infrastructure assets to location intelligence</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Asset data without spatial context can't support real operational or planning decisions.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Spatial data modelling</li><li>Asset-to-network linkage</li><li>GIS platform integration</li><li>Dashboard delivery</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Faster maintenance response</li><li>Improved planning accuracy</li><li>Real-time spatial visibility</li></ul>
+          <p class="tagline">Enable spatial intelligence in your asset systems.</p>
+        </div>
+      </article>
+
+      <!-- 3 Construction to Ops -->
+      <article id="svc-handover" class="cap reveal" data-cat="build">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <rect x="14" y="48" width="78" height="54" rx="6" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <rect x="121" y="48" width="78" height="54" rx="6" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.5"/>
+            <rect x="228" y="48" width="78" height="54" rx="6" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <path d="M92 75 H121 M199 75 H228" stroke="#E9A23B" stroke-width="1.6"/>
+            <path d="M115 69 L121 75 L115 81 M222 69 L228 75 L222 81" stroke="#E9A23B" stroke-width="1.6" fill="none"/>
+            <text x="53" y="78" fill="#9FB2C2" font-family="monospace" font-size="9" text-anchor="middle">BUILD</text>
+            <text x="160" y="78" fill="#E9A23B" font-family="monospace" font-size="9" text-anchor="middle">VALIDATE</text>
+            <text x="267" y="78" fill="#9FB2C2" font-family="monospace" font-size="9" text-anchor="middle">OPERATE</text>
+            <text x="160" y="128" fill="#A8BDCE" font-family="monospace" font-size="9" text-anchor="middle">HANDOVER PIPELINE</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Construction-to-Operations Handover</h3>
+          <span class="cap-tag">Ensuring seamless transition from delivery to operational readiness</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Engineering data degrades at handover, leaving operations teams to rebuild what already existed.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Handover data spec</li><li>QA &amp; validation gates</li><li>Register population</li><li>Operational acceptance</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Reduced operational delays</li><li>Accurate asset registers</li><li>Lower lifecycle cost impact</li></ul>
+          <p class="tagline">Ensure your assets are operational from day one.</p>
+        </div>
+      </article>
+
+      <!-- 4 Data Quality & Governance -->
+      <article id="svc-data-quality" class="cap reveal d1" data-cat="data">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <circle cx="160" cy="75" r="58" stroke="#5C7E9A" stroke-width="1.2" stroke-dasharray="4 4"/>
+            <circle cx="160" cy="75" r="30" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.5"/>
+            <text x="160" y="79" fill="#E9A23B" font-family="monospace" font-size="9" text-anchor="middle">QUALITY</text>
+            <g font-family="monospace" font-size="8" fill="#9FB2C2" text-anchor="middle">
+              <circle cx="160" cy="17" r="9" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.3"/><text x="160" y="20">A</text>
+              <circle cx="218" cy="75" r="9" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.3"/><text x="218" y="78">D</text>
+              <circle cx="160" cy="133" r="9" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.3"/><text x="160" y="136">M</text>
+              <circle cx="102" cy="75" r="9" fill="#1E3A55" stroke="#E9A23B" stroke-width="1.3"/><text x="102" y="78">G</text>
+            </g>
+            <text x="160" y="148" fill="#A8BDCE" font-family="monospace" font-size="8" text-anchor="middle">AUDIT · DEFINE · GOVERN · MONITOR</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Asset Data Quality &amp; Governance</h3>
+          <span class="cap-tag">Ensuring accuracy, consistency, and control of asset information</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Poor data quality drives unreliable reporting, compliance risk, and operational inefficiency.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Data audits</li><li>Quality rule definition</li><li>Governance frameworks</li><li>Continuous monitoring</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Trusted asset data</li><li>Improved compliance</li><li>Reduced operational risk</li></ul>
+          <p class="tagline">Make data quality a continuous discipline, not a one-off cleanup.</p>
+        </div>
+      </article>
+
+      <!-- 5 Lifecycle Analytics -->
+      <article id="svc-lifecycle" class="cap reveal" data-cat="spatial">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <line x1="30" y1="120" x2="300" y2="120" stroke="#5C7E9A" stroke-width="1.2"/>
+            <line x1="30" y1="20" x2="30" y2="120" stroke="#5C7E9A" stroke-width="1.2"/>
+            <path d="M30 110 Q90 95 130 55 T230 50 Q270 55 295 95" stroke="#E9A23B" stroke-width="2" fill="none"/>
+            <circle cx="90" cy="83" r="4" fill="#E9A23B"/><circle cx="180" cy="48" r="4" fill="#E9A23B"/><circle cx="295" cy="95" r="4" fill="#E9A23B"/>
+            <g font-family="monospace" font-size="8" fill="#A8BDCE" text-anchor="middle"><text x="90" y="135">ACQUIRE</text><text x="180" y="135">OPERATE</text><text x="270" y="135">RENEW</text></g>
+            <text x="20" y="68" fill="#A8BDCE" font-family="monospace" font-size="8" transform="rotate(-90 20 68)" text-anchor="middle">PERFORMANCE</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Lifecycle Analytics</h3>
+          <span class="cap-tag">Turning asset data into performance and risk intelligence</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Asset decisions are reactive without lifecycle visibility — driving unplanned failures and excess cost.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Asset performance modelling</li><li>Risk analysis</li><li>Maintenance optimisation</li><li>Lifecycle forecasting</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Optimised maintenance timing</li><li>Reduced lifecycle cost</li><li>Fewer unplanned failures</li></ul>
+          <p class="tagline">Plan against the whole life of the asset, not just today.</p>
+        </div>
+      </article>
+
+      <!-- 6 Digital Asset Strategy -->
+      <article id="svc-digital-strategy" class="cap reveal d1" data-cat="build">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <g stroke="#E9A23B" stroke-width="1.4">
+              <rect x="90" y="14" width="150" height="22" rx="4" fill="#E9A23B"/>
+              <rect x="70" y="44" width="190" height="22" rx="4" fill="#1E3A55"/>
+              <rect x="50" y="74" width="230" height="22" rx="4" fill="#1E3A55"/>
+              <rect x="30" y="104" width="270" height="22" rx="4" fill="#1E3A55"/>
+            </g>
+            <g font-family="monospace" font-size="9" text-anchor="middle">
+              <text x="165" y="29" fill="#0B1A2B">STRATEGY</text><text x="165" y="59" fill="#E9A23B">PROCESSES</text>
+              <text x="165" y="89" fill="#E9A23B">SYSTEMS</text><text x="165" y="119" fill="#E9A23B">DATA</text>
+            </g>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Digital Asset Strategy</h3>
+          <span class="cap-tag">Building future-ready infrastructure asset ecosystems</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Organisations lack a clear roadmap for integrating data, systems, and processes across asset stages.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Digital maturity assessment</li><li>Systems alignment strategy</li><li>Data architecture planning</li><li>Implementation roadmap</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Future-ready asset systems</li><li>Improved digital integration</li><li>Aligned technology investment</li></ul>
+          <p class="tagline">Connect strategy to systems, systems to data.</p>
+        </div>
+      </article>
+
+      <!-- 7 Data Infrastructure & Backend -->
+      <article id="svc-data-infrastructure" class="cap reveal" data-cat="build">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <rect x="20" y="30" width="80" height="26" rx="5" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <rect x="20" y="94" width="80" height="26" rx="5" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <rect x="140" y="58" width="56" height="34" rx="6" fill="#E9A23B"/>
+            <rect x="236" y="30" width="80" height="26" rx="5" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <rect x="236" y="94" width="80" height="26" rx="5" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <g stroke="#E9A23B" stroke-width="1.3" stroke-dasharray="3 3">
+              <path d="M100 43 L140 70"/><path d="M100 107 L140 80"/><path d="M196 70 L236 43"/><path d="M196 80 L236 107"/>
+            </g>
+            <text x="168" y="79" fill="#0B1A2B" font-family="monospace" font-size="8" text-anchor="middle">GATEWAY</text>
+            <text x="60" y="48" fill="#9FB2C2" font-family="monospace" font-size="8" text-anchor="middle">PIPELINES</text>
+            <text x="60" y="112" fill="#9FB2C2" font-family="monospace" font-size="8" text-anchor="middle">API LAYER</text>
+            <text x="276" y="48" fill="#9FB2C2" font-family="monospace" font-size="8" text-anchor="middle">GIS</text>
+            <text x="276" y="112" fill="#9FB2C2" font-family="monospace" font-size="8" text-anchor="middle">REPORTING</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Data Infrastructure &amp; Backend Support</h3>
+          <span class="cap-tag">Designing the data foundations that power operational asset systems</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Systems fail not from poor strategy but because schemas, pipelines, and APIs were never built for reality.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Schema &amp; data model design</li><li>API &amp; integration architecture</li><li>Data pipeline configuration</li><li>System connectivity &amp; testing</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Stable, scalable foundations</li><li>Clean data flow between systems</li><li>Reduced integration failures</li></ul>
+          <p class="tagline">Build infrastructure that lasts.</p>
+        </div>
+      </article>
+
+      <!-- 8 Operational Support Apps -->
+      <article id="svc-support-apps" class="cap reveal d1" data-cat="data">
+        <div class="cap-viz">
+          <svg viewBox="0 0 320 150" fill="none">
+            <rect x="40" y="22" width="60" height="106" rx="8" fill="#1E3A55" stroke="#5C7E9A" stroke-width="1.3"/>
+            <rect x="48" y="34" width="44" height="6" rx="3" fill="#5C7E9A"/><rect x="48" y="46" width="44" height="6" rx="3" fill="#5C7E9A"/><rect x="48" y="58" width="30" height="6" rx="3" fill="#E9A23B"/>
+            <text x="70" y="120" fill="#A8BDCE" font-family="monospace" font-size="8" text-anchor="middle">FIELD APP</text>
+            <path d="M100 75 H140" stroke="#E9A23B" stroke-width="1.6"/><path d="M134 69 L140 75 L134 81" stroke="#E9A23B" stroke-width="1.6" fill="none"/>
+            <g>
+              <rect x="160" y="96" width="20" height="32" rx="2" fill="#5C7E9A"/>
+              <rect x="190" y="74" width="20" height="54" rx="2" fill="#E9A23B"/>
+              <rect x="220" y="56" width="20" height="72" rx="2" fill="#5C7E9A"/>
+              <rect x="250" y="84" width="20" height="44" rx="2" fill="#E9A23B"/>
+            </g>
+            <text x="215" y="40" fill="#9FB2C2" font-family="monospace" font-size="8" text-anchor="middle">TASK COMPLETION</text>
+          </svg>
+        </div>
+        <div class="cap-body">
+          <h3>Operational Support Applications</h3>
+          <span class="cap-tag">Practical tools that help your team get the job done every day</span>
+          <div class="cap-sub">Challenge</div>
+          <p class="ch">Field teams are stuck with spreadsheets and paper forms never designed for how they actually work.</p>
+          <div class="cap-sub">Approach</div>
+          <ol><li>Operational workflow analysis</li><li>Purpose-built app design</li><li>Field &amp; desktop delivery</li><li>Ongoing support &amp; iteration</li></ol>
+          <div class="cap-sub">Outcomes</div>
+          <ul><li>Tools teams actually use</li><li>Faster data capture in the field</li><li>Reduced reliance on spreadsheets</li></ul>
+          <p class="tagline">Give your team tools that work for them.</p>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<section class="section" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap why">
+    <div class="reveal">
+      <span class="eyebrow">Why us</span>
+      <h2 style="font-size:clamp(30px,4vw,44px);font-weight:800;margin:18px 0 36px">Why Assetnixa</h2>
+      <div class="why-list">
+        <div class="why-item"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><div><h4>We support businesses of every size</h4><p>From small local operators to large government agencies and enterprise clients — every project receives the same specialist attention, care, and quality delivery.</p></div></div>
+        <div class="why-item"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6Z"/></svg></span><div><h4>We genuinely care about you and your work</h4><p>Your products, services, and goals matter to us. We invest time understanding your operational reality so every solution is shaped around your needs — not a generic template.</p></div></div>
+        <div class="why-item"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M9 12l2 2 4-4"/></svg></span><div><h4>Operational readiness mindset</h4><p>Data is only valuable if it serves the maintenance strategy. We ensure your asset information works in the field from day one.</p></div></div>
+        <div class="why-item"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span><div><h4>Transparent, competitive pricing</h4><p>Specialist expertise without the overhead of a global firm — you pay for the work, not the brand.</p></div></div>
+      </div>
+    </div>
+    <div class="quote-card reveal d1">
+      <p class="q">“We don't manage data — we make it operationally usable.”</p>
+      <hr>
+      <div class="by"><span class="av">A</span><div><b>Assetnixa Directive</b><small>Core Philosophy</small></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIFFERENCE ============ -->
+<section class="section diff">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">The difference</span>
+      <h2>Expert value — without the big-firm price tag</h2>
+      <p>Large consultancies charge premium rates for senior brand and junior delivery. We give you senior specialist expertise directly — at rates that reflect the actual work.</p>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-col them reveal">
+        <h4>The big-firm model</h4>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#9AA8B4" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>Premium rates for brand, not outcomes</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#9AA8B4" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>Senior pitch, junior delivery</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#9AA8B4" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>Generic frameworks reused across clients</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#9AA8B4" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>Relationship lock-in as the business model</li>
+        </ul>
+      </div>
+      <div class="diff-col us reveal d1">
+        <h4>The Assetnixa model</h4>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Specialist expertise, directly delivered</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Solutions shaped to your operational reality</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Transparent scope and pricing from day one</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#2E9E6B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Long-term partnership built on results, not dependency</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INDUSTRIES ============ -->
+<section class="section" id="industries">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Sectors we serve</span>
+      <h2>Industries We Support</h2>
+      <p>Providing specialised data intelligence for complex infrastructure ecosystems.</p>
+    </div>
+    <div class="ind-grid reveal">
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16M8 21l2-4M16 21l-2-4M8 7h.01M16 7h.01"/></svg>Transport (Rail &amp; Road)</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>Utilities &amp; Energy</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/></svg>Telecommunications</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8.9a5.2 5.2 0 0 0 0-7.4Z"/><path d="M3.5 12.5H8l1.5-3 2.5 5 1.5-2H20"/></svg>Healthcare</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>Government Infrastructure</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M4 20V8l6-4 6 4M14 20V11l4-2 2 2v9M7 12h.01M7 16h.01"/></svg>Major Capital Projects</span>
+      <span class="ind"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21V10l6 3.5V10l6 3.5V6l6 3v12H3Z"/><path d="M7 17h.01M12 17h.01M17 17h.01"/></svg>Industrial &amp; Manufacturing</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CASE STUDIES ============ -->
+<section class="section case-band" id="cases">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow" style="color:var(--gold)">Selected work</span>
+      <h2>Case Studies</h2>
+      <p>Representative engagements showing how structured data turns into operational results.</p>
+    </div>
+    <div class="case-grid">
+      <article class="case reveal">
+        <div class="case-tags"><span>Government</span><span>Digital Strategy</span></div>
+        <h3>Digital Asset Strategy for Government Infrastructure Portfolio</h3>
+        <div class="client">Client: Government infrastructure asset owner</div>
+        <div class="case-sub">Challenge</div>
+        <p>Significant physical assets with no consistent digital approach — records held in spreadsheets and legacy systems with no integration or governance, creating compliance risk and blind spots.</p>
+        <div class="case-sub">Solution</div>
+        <p>A staged digital asset strategy: maturity assessment, target data architecture, and a phased roadmap connecting data, systems, and processes.</p>
+        <div class="case-sub">Outcomes</div>
+        <ul><li>Single source of truth for lifecycle status</li><li>Capital planning accuracy over a 10-year horizon</li><li>Foundation for future GIS &amp; analytics integration</li></ul>
+      </article>
+      <article class="case reveal d1">
+        <div class="case-tags"><span>Telecoms</span><span>Data Governance</span></div>
+        <h3>Construction Data Governance for Major Telecoms Rollout</h3>
+        <div class="client">Client: National telecommunications infrastructure program</div>
+        <div class="case-sub">Challenge</div>
+        <p>Rapid deployment meant asset data was captured inconsistently across delivery partners. Errors compounded as the program scaled, threatening register integrity at handover.</p>
+        <div class="case-sub">Solution</div>
+        <p>A governance framework with data quality rules, partner standards, and validation gates embedded into the delivery workflow.</p>
+        <div class="case-sub">Outcomes</div>
+        <ul><li>Consistent asset data across all packages</li><li>Reduced rework in register integration</li><li>Handover-ready register on program timelines</li></ul>
+      </article>
+      <article class="case reveal">
+        <div class="case-tags"><span>Transport</span><span>GIS &amp; Spatial</span></div>
+        <h3>GIS-Linked Asset Register for a Metropolitan Rail Network</h3>
+        <div class="client">Client: Metropolitan rail infrastructure operator</div>
+        <div class="case-sub">Challenge</div>
+        <p>Track, signalling, and structures data sat in separate registers with no spatial link, so maintenance crews couldn't see what assets sat where along the corridor.</p>
+        <div class="case-sub">Solution</div>
+        <p>We linked every asset class to a single spatial reference model and surfaced it through GIS dashboards built around real maintenance workflows.</p>
+        <div class="case-sub">Outcomes</div>
+        <ul><li>Real-time spatial view of the asset network</li><li>Faster fault location and response</li><li>Reduced reliance on manual lookups</li></ul>
+      </article>
+      <article class="case reveal d1">
+        <div class="case-tags"><span>Utilities &amp; Energy</span><span>Lifecycle Analytics</span></div>
+        <h3>Lifecycle Analytics for a Regional Water &amp; Energy Utility</h3>
+        <div class="client">Client: Regional utility asset owner</div>
+        <div class="case-sub">Challenge</div>
+        <p>Maintenance was largely reactive, with no clear view of which assets were nearing end of life or driving the most unplanned failures.</p>
+        <div class="case-sub">Solution</div>
+        <p>We modelled asset performance and risk across the estate and built lifecycle forecasts to prioritise intervention and capital spend.</p>
+        <div class="case-sub">Outcomes</div>
+        <ul><li>Optimised maintenance timing</li><li>Fewer unplanned failures</li><li>Stronger, evidence-based capital planning</li></ul>
+      </article>
+      <article class="case reveal d2">
+        <div class="case-tags"><span>Major Capital Projects</span><span>Asset Information</span></div>
+        <h3>Asset Information Foundation for a Major Capital Project</h3>
+        <div class="client">Client: Major capital infrastructure delivery program</div>
+        <div class="case-sub">Challenge</div>
+        <p>As the project scaled, asset information was captured in inconsistent formats across contractors, with no agreed structure for what operations would eventually need.</p>
+        <div class="case-sub">Solution</div>
+        <p>We defined the asset information requirements up front and built a single structured register that contractors populated to one standard throughout delivery.</p>
+        <div class="case-sub">Outcomes</div>
+        <ul><li>Operations-ready asset data at completion</li><li>Reduced post-handover remediation</li><li>Clear data accountability across contractors</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ INSIGHTS ============ -->
+<section class="section" id="insights">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Thinking</span>
+      <h2>Insights &amp; Thought Leadership</h2>
+      <p>Expert perspectives on infrastructure data, engineering systems, and asset intelligence.</p>
+    </div>
+    <div class="ins-grid">
+      <a class="ins reveal" href="#contact">
+        <div class="meta">Governance · Oct 12, 2023</div>
+        <h3>Asset Data Governance Challenges in Infrastructure Programs</h3>
+        <p>Infrastructure programs routinely underestimate the cost of poor asset data governance. This is what it really costs — and how to get ahead of it.</p>
+        <span class="read">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+      <a class="ins reveal d1" href="#contact">
+        <div class="meta">GIS · Nov 04, 2023</div>
+        <h3>GIS in Infrastructure Operations: Beyond the Map</h3>
+        <p>GIS has long been used to draw maps of infrastructure networks. Its real value — as an operational decision layer — is only now being unlocked.</p>
+        <span class="read">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+      <a class="ins reveal d2" href="#contact">
+        <div class="meta">Lifecycle · Jan 18, 2024</div>
+        <h3>The Construction-to-Operations Handover: A Model That Works</h3>
+        <p>The transition from construction to operations is where infrastructure data risk concentrates. A repeatable handover model removes most of it.</p>
+        <span class="read">Read article <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="section" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Good to know</span>
+      <h2>Frequently asked questions</h2>
+    </div>
+    <div class="faq-wrap reveal">
+      <div class="faq"><button aria-expanded="false">How do we get started?<span class="pm"></span></button><div class="ans"><p>Every engagement begins with a free discovery call. We learn your context, current systems, and the outcome you're chasing, then propose a focused scope with transparent pricing — no obligation.</p></div></div>
+      <div class="faq"><button aria-expanded="false">Do you only work with large organisations?<span class="pm"></span></button><div class="ans"><p>No. We deliberately support businesses of every size — from small local operators to large government agencies. Each project receives the same specialist attention regardless of scale.</p></div></div>
+      <div class="faq"><button aria-expanded="false">Do we have to replace our existing systems?<span class="pm"></span></button><div class="ans"><p>Rarely. Most of our work makes the systems you already own work better together — through data models, governance, integration, and spatial linkage — rather than forcing a costly rip-and-replace.</p></div></div>
+      <div class="faq"><button aria-expanded="false">How is pricing structured?<span class="pm"></span></button><div class="ans"><p>Transparent scope and pricing from day one. You pay for senior specialist work directly — without the overhead of a global firm, and without relationship lock-in.</p></div></div>
+      <div class="faq"><button aria-expanded="false">Which industries do you specialise in?<span class="pm"></span></button><div class="ans"><p>Transport (rail &amp; road), utilities &amp; energy, telecommunications, government infrastructure, and major capital projects — complex asset ecosystems where data usability directly affects operations.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="section contact-band" id="contact">
+  <div class="wrap contact">
+    <div class="contact-left reveal">
+      <span class="eyebrow">Let's talk</span>
+      <h2>Book a free discovery call</h2>
+      <p>Tell us where your asset data is today and where you need it to be. We'll show you a clear, practical path — no jargon, no obligation.</p>
+      <ul class="promise">
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>We care about small, medium &amp; large business alike</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>We care about your product and service</li>
+        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Transparent scope and pricing from day one</li>
+      </ul>
+      <div class="contact-info">
+        <a href="mailto:contact@assetnixa.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>contact@assetnixa.com</a>
+        <a href="mailto:support@assetnixa.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>support@assetnixa.com</a>
+        <a href="tel:+61405553444"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>+61 405 553 444</a>
+      </div>
+    </div>
+
+    <div class="reveal d1">
+      <form class="form" id="contactForm" novalidate>
+        <div class="row2">
+          <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" placeholder="Jane Smith" required></div>
+          <div class="field"><label for="org">Organisation</label><input id="org" name="org" type="text" placeholder="Company / agency"></div>
+        </div>
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@organisation.com" required></div>
+        <div class="field">
+          <label>What do you need help with?</label>
+          <div class="chips">
+            <label><input type="checkbox" name="service" value="Asset Information"><span>Asset Information</span></label>
+            <label><input type="checkbox" name="service" value="GIS & Spatial"><span>GIS &amp; Spatial</span></label>
+            <label><input type="checkbox" name="service" value="Handover"><span>Handover</span></label>
+            <label><input type="checkbox" name="service" value="Data Quality"><span>Data Quality</span></label>
+            <label><input type="checkbox" name="service" value="Lifecycle Analytics"><span>Lifecycle Analytics</span></label>
+            <label><input type="checkbox" name="service" value="Digital Strategy"><span>Digital Strategy</span></label>
+            <label><input type="checkbox" name="service" value="Data Infrastructure"><span>Data Infrastructure</span></label>
+            <label><input type="checkbox" name="service" value="Support Apps"><span>Support Apps</span></label>
+          </div>
+        </div>
+        <div class="field"><label for="msg">Tell us about your project</label><textarea id="msg" name="msg" placeholder="Brief description of your project, key challenges, or the outcome you're looking for…"></textarea></div>
+        <button type="submit" class="btn btn-dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
+          Book a Free Discovery Call</button>
+        <p class="note">Your information is never shared with third parties.</p>
+        <p class="form-err" id="formErr">Sorry, something went wrong sending your enquiry. Please email <a href="mailto:contact@assetnixa.com" style="color:inherit;text-decoration:underline">contact@assetnixa.com</a>.</p>
+      </form>
+      <div class="form-success" id="formSuccess">
+        <div class="ok-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h3>Thanks — we've got it.</h3>
+        <p>We'll be in touch within one business day to arrange your discovery call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <span class="brand"><svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>Assetnixa</span>
+        <p>GIS, asset management, and infrastructure analytics services and consultancy — turning fragmented data into operational confidence.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h5>Explore</h5><a href="#capabilities">Services</a><a href="#industries">Industries</a><a href="#cases">Case Studies</a><a href="#insights">Insights</a></div>
+        <div class="foot-col"><h5>Company</h5><a href="#contact">Contact</a><a href="#capabilities">Capabilities</a><a href="mailto:contact@assetnixa.com">contact@assetnixa.com</a></div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Assetnixa Consulting. All rights reserved.</span>
+      <span><a href="#">Privacy Policy</a> &nbsp;·&nbsp; <a href="#">Terms</a></span>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" id="toTop" aria-label="Back to top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></button>
+
+<script>
+(function(){
+  "use strict";
+  /* Header shadow on scroll */
+  var header=document.querySelector('header'),toTop=document.getElementById('toTop');
+  function onScroll(){
+    var y=window.scrollY;
+    header.classList.toggle('scrolled',y>10);
+    toTop.classList.toggle('show',y>700);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  toTop.addEventListener('click',function(){window.scrollTo({top:0,behavior:'smooth'});});
+
+
+  /* Mobile menu */
+  var panel=document.getElementById('mobilePanel');
+  document.getElementById('menuToggle').addEventListener('click',function(){panel.classList.add('open');document.body.style.overflow='hidden';});
+  document.getElementById('mpClose').addEventListener('click',closePanel);
+  panel.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closePanel);});
+  function closePanel(){panel.classList.remove('open');document.body.style.overflow='';}
+
+  /* Reveal on scroll */
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+
+  /* Count-up stats */
+  var counted=false;
+  var statSec=document.querySelector('.stats');
+  var sObs=new IntersectionObserver(function(e){
+    if(e[0].isIntersecting&&!counted){counted=true;runCounts();sObs.disconnect();}
+  },{threshold:.4});
+  if(statSec)sObs.observe(statSec);
+  function runCounts(){
+    document.querySelectorAll('.num[data-count]').forEach(function(el){
+      var target=+el.dataset.count,suf=el.dataset.suffix||'',dec=+(el.dataset.decimals||0),start=0,dur=1400,t0=null;
+      function step(ts){if(!t0)t0=ts;var p=Math.min((ts-t0)/dur,1);var eased=1-Math.pow(1-p,3);
+        el.textContent=(start+(target-start)*eased).toFixed(dec)+suf;
+        if(p<1)requestAnimationFrame(step);}
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* FAQ accordion */
+  document.querySelectorAll('.faq button').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var faq=btn.parentElement,ans=faq.querySelector('.ans'),open=faq.getAttribute('aria-expanded')==='true';
+      document.querySelectorAll('.faq').forEach(function(f){f.setAttribute('aria-expanded','false');f.querySelector('.ans').style.maxHeight=null;f.querySelector('button').setAttribute('aria-expanded','false');});
+      if(!open){faq.setAttribute('aria-expanded','true');btn.setAttribute('aria-expanded','true');ans.style.maxHeight=ans.scrollHeight+'px';}
+    });
+  });
+
+  /* Capability filter */
+  var filterBtns=document.querySelectorAll('#capFilters button'),caps=document.querySelectorAll('#capGrid .cap');
+  filterBtns.forEach(function(b){
+    b.addEventListener('click',function(){
+      filterBtns.forEach(function(x){x.classList.remove('active');});b.classList.add('active');
+      var f=b.dataset.filter;
+      caps.forEach(function(c){
+        var show=f==='all'||c.dataset.cat===f;
+        c.style.display=show?'':'none';
+      });
+    });
+  });
+
+  /* Contact form → Supabase
+     Fill these two values in after creating your Supabase project (see setup guide).
+     The anon key is safe to expose in the browser; Row Level Security limits it to inserts only. */
+  var SUPABASE_URL='YOUR_SUPABASE_URL';            /* e.g. https://abcd1234.supabase.co */
+  var SUPABASE_ANON_KEY='YOUR_SUPABASE_ANON_KEY';  /* public anon/publishable key */
+  var SUPABASE_TABLE='discovery_calls';
+
+  var form=document.getElementById('contactForm');
+  var submitBtn=form.querySelector('button[type="submit"]');
+  var formErr=document.getElementById('formErr');
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    formErr.style.display='none';
+    if(!form.checkValidity()){form.reportValidity();return;}
+
+    var services=Array.prototype.slice.call(form.querySelectorAll('input[name="service"]:checked')).map(function(c){return c.value;});
+    var payload={
+      name:document.getElementById('name').value.trim(),
+      organisation:document.getElementById('org').value.trim(),
+      email:document.getElementById('email').value.trim(),
+      services:services,
+      message:document.getElementById('msg').value.trim()
+    };
+
+    function showSuccess(){form.style.display='none';document.getElementById('formSuccess').classList.add('show');}
+
+    /* If Supabase isn't configured yet, just show the success state so the site still works. */
+    if(SUPABASE_URL.indexOf('http')!==0){showSuccess();return;}
+
+    var label=submitBtn.innerHTML;submitBtn.disabled=true;submitBtn.innerHTML='Sending…';
+    fetch(SUPABASE_URL+'/rest/v1/'+SUPABASE_TABLE,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+SUPABASE_ANON_KEY,'Prefer':'return=minimal'},
+      body:JSON.stringify(payload)
+    }).then(function(res){
+      submitBtn.disabled=false;submitBtn.innerHTML=label;
+      if(res.ok){showSuccess();}else{formErr.style.display='block';}
+    }).catch(function(){
+      submitBtn.disabled=false;submitBtn.innerHTML=label;formErr.style.display='block';
+    });
+  });
+})();
+</script>
+</body>
+</html>
