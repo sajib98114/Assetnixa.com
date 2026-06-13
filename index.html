@@ -92,10 +92,10 @@
   .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
   .brand{display:flex;align-items:center;gap:12px;font-family:"Sora",sans-serif;font-weight:800;font-size:22.5px;color:var(--ink);letter-spacing:-.03em}
   .brand .mark{width:39px;height:39px;flex:none;filter:drop-shadow(0 3px 6px rgba(11,26,43,.14))}
-  .nav-links{display:flex;align-items:center;gap:4px;list-style:none}
+  .nav-links{display:flex;align-items:center;gap:4px;list-style:none;margin-left:auto}
   .nav-links a,.nav-links button{
     font-family:"Sora",sans-serif;font-weight:500;font-size:15.5px;color:var(--slate);
-    padding:10px 14px;border-radius:9px;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s,background .2s
+    padding:10px 14px;border-radius:9px;background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:color .2s,background .2s;white-space:nowrap
   }
   .nav-links a:hover,.nav-links button:hover{color:var(--ink);background:var(--paper-2)}
   .nav-links .caret{width:13px;height:13px;transition:transform .3s}
@@ -362,7 +362,7 @@
     .case-grid{grid-template-columns:repeat(2,1fr)}
   }
   @media(max-width:960px){
-    .nav-links,.nav-cta .btn,.nav-cta .lang-wrap{display:none}
+    .nav-links,.nav-cta .btn{display:none}
     .menu-toggle{display:grid}
     .hero .wrap{grid-template-columns:1fr;padding-top:60px;padding-bottom:64px}
     .hero-art{max-width:360px;margin:0 auto;order:-1}
@@ -385,6 +385,8 @@
   }
 
   .lang-wrap{position:relative;display:flex;align-items:center}
+  .lang-li{margin-left:8px}
+  .nav-links .lang-select{padding-top:7px;padding-bottom:7px;font-size:13px}
   .lang-wrap>svg{position:absolute;left:11px;width:16px;height:16px;color:var(--muted);pointer-events:none}
   .lang-select{appearance:none;-webkit-appearance:none;font-family:"Sora",sans-serif;font-weight:500;font-size:14px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:9px 30px 9px 33px;cursor:pointer;transition:border-color .2s}
   .lang-select:hover{border-color:var(--gold)}
@@ -393,6 +395,7 @@
   [dir="rtl"] .lang-select{padding:9px 33px 9px 30px}
   [dir="rtl"] .lang-wrap::after{right:auto;left:13px}
   [dir="rtl"] .eyebrow::before{margin-left:6px}
+  .hp-field{position:absolute!important;left:-9999px!important;width:1px;height:1px;overflow:hidden}
 </style>
 </head>
 <body>
@@ -412,16 +415,17 @@
       <li><a href="#cases">Case Studies</a></li>
       <li><a href="#insights">Insights</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li class="lang-li">
+        <div class="lang-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          <select class="lang-select" aria-label="Select language">
+            <option value="en">English</option><option value="ar">العربية</option><option value="de">Deutsch</option><option value="es">Español</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="bn">বাংলা</option>
+          </select>
+        </div>
+      </li>
     </ul>
 
     <div class="nav-cta">
-      <div class="lang-wrap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
-        <select class="lang-select" aria-label="Select language">
-          <option value="en">English</option><option value="ar">العربية</option><option value="de">Deutsch</option><option value="es">Español</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="bn">বাংলা</option>
-        </select>
-      </div>
-      <a href="#contact" class="btn btn-gold">Book a Free Discovery Call</a>
       <button class="menu-toggle" id="menuToggle" aria-label="Open menu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -449,7 +453,7 @@
       <option value="en">English</option><option value="ar">العربية</option><option value="de">Deutsch</option><option value="es">Español</option><option value="hi">हिन्दी</option><option value="zh">中文</option><option value="vi">Tiếng Việt</option><option value="bn">বাংলা</option>
     </select>
   </div>
-  <a href="#contact" class="btn btn-gold">Book a Free Discovery Call</a>
+  <a href="#contact" class="btn btn-dark">Book a Free Discovery Call</a>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -1035,6 +1039,7 @@
 
     <div class="reveal d1">
       <form class="form" id="contactForm" novalidate>
+        <div class="hp-field" aria-hidden="true"><label>Leave this field empty<input type="text" name="company_website" tabindex="-1" autocomplete="off"></label></div>
         <div class="row2">
           <div class="field"><label for="name">Your name</label><input id="name" name="name" type="text" placeholder="Jane Smith" required></div>
           <div class="field"><label for="org">Organisation</label><input id="org" name="org" type="text" placeholder="Company / agency"></div>
@@ -1164,6 +1169,10 @@
   var SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkdmN6ZGpsZnZzaXdjcnliZHRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMDY0MjksImV4cCI6MjA5Njg4MjQyOX0.9xsrslxkTmKl3rjS5C80qlZP0v7G1pQXqW4B8_B0pFw';
   var SUPABASE_TABLE='discovery_calls';
 
+  document.querySelectorAll('a[href="#top"]').forEach(function(a){
+    a.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});
+  });
+
   var form=document.getElementById('contactForm');
   var submitBtn=form.querySelector('button[type="submit"]');
   var formErr=document.getElementById('formErr');
@@ -1183,6 +1192,10 @@
     };
 
     function showSuccess(){form.style.display='none';document.getElementById('formSuccess').classList.add('show');}
+
+    /* Honeypot: real visitors never see or fill this field — if it has a value, it's a bot. Stop silently. */
+    var hp=form.querySelector('[name="company_website"]');
+    if(hp&&hp.value){showSuccess();return;}
 
     /* If Supabase isn't configured yet, just show the success state so the site still works. */
     if(SUPABASE_URL.indexOf('http')!==0){showSuccess();return;}
