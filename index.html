@@ -119,7 +119,7 @@
   .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
   .hero-art{position:relative;aspect-ratio:1/1;max-width:480px;margin-left:auto;width:100%}
   .hero-slider{position:absolute;inset:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid var(--line)}
-  .hero-slide{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s var(--ease)}
+  .hero-slide{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity .9s var(--ease)}
   .hero-slide.active{opacity:1}
   .hero-dots{position:absolute;left:0;right:0;bottom:14px;display:flex;gap:7px;justify-content:center;z-index:2}
   .hero-dots .hd{width:9px;height:9px;border-radius:50%;border:none;background:rgba(255,255,255,.55);cursor:pointer;padding:0;transition:all .3s var(--ease)}
@@ -569,11 +569,11 @@
     </div>
     <div class="hero-art reveal d1">
       <div class="hero-slider" id="heroSlider">
-        <img class="hero-slide active" src="hero-1.jpg" alt="" width="1000" height="1000">
-        <img class="hero-slide" src="hero-2.jpg" alt="" width="1000" height="1000" loading="lazy">
-        <img class="hero-slide" src="hero-3.jpg" alt="" width="1000" height="1000" loading="lazy">
-        <img class="hero-slide" src="hero-4.jpg" alt="" width="1000" height="1000" loading="lazy">
-        <img class="hero-slide" src="hero-5.jpg" alt="" width="1000" height="1000" loading="lazy">
+        <div class="hero-slide active" style="background-image:url('hero-1.jpg')" role="img" aria-label="Infrastructure asset data visual"></div>
+        <div class="hero-slide" style="background-image:url('hero-2.jpg')" role="img" aria-label="Asset management visual"></div>
+        <div class="hero-slide" style="background-image:url('hero-3.jpg')" role="img" aria-label="Data management visual"></div>
+        <div class="hero-slide" style="background-image:url('hero-4.jpg')" role="img" aria-label="GIS visual"></div>
+        <div class="hero-slide" style="background-image:url('hero-5.jpg')" role="img" aria-label="Asset tracking with GIS visual"></div>
         <div class="hero-dots">
           <button type="button" class="hd active" data-i="0" aria-label="Show image 1"></button>
           <button type="button" class="hd" data-i="1" aria-label="Show image 2"></button>
@@ -1495,7 +1495,7 @@
       ix=(n+sl.length)%sl.length;
       sl[ix].classList.add('active');dt[ix].classList.add('active');
     }
-    function hstart(){tm=setInterval(function(){hgo(ix+1);},4500);}
+    function hstart(){tm=setInterval(function(){hgo(ix+1);},5000);}
     function hstop(){clearInterval(tm);}
     dt.forEach(function(d,i){d.addEventListener('click',function(){hgo(i);hstop();hstart();});});
     hs.addEventListener('mouseenter',hstop);hs.addEventListener('mouseleave',hstart);
