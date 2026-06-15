@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asset Tagging Toolkit — Assetnixa Digital Tools</title>
+<meta name="description" content="The Assetnixa Asset Tagging Toolkit — an infrastructure asset identification and operational readiness tool. Tag assets, generate QR codes, validate data and prepare clean handover.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0A1521;--navy:#0E2236;--navy-2:#16273A;--slate:#3A4D5E;--muted:#6B7C8C;
+    --line:#E4EAF0;--line-dark:#2A3E52;--paper:#FFFFFF;--paper-2:#F5F8FB;
+    --gold:#E9A23B;--gold-deep:#C9852A;--gold-soft:#FBEFD8;--ok:#2E9E6B;
+    --radius:18px;--shadow-sm:0 2px 10px rgba(10,21,33,.06);
+    --shadow-md:0 12px 34px rgba(10,21,33,.12);--shadow-lg:0 26px 70px rgba(10,21,33,.22);
+    --ease:cubic-bezier(.22,1,.36,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:"Inter",sans-serif;color:var(--slate);background:#fff;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,h4{font-family:"Sora",sans-serif;color:var(--ink);letter-spacing:-.02em;line-height:1.1}
+  a{text-decoration:none;color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-family:"Sora",sans-serif;font-size:12.5px;font-weight:700;color:var(--gold-deep);text-transform:uppercase;letter-spacing:.08em;display:inline-flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:26px;height:2px;background:var(--gold)}
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:"Sora",sans-serif;font-weight:600;font-size:15px;padding:13px 22px;border-radius:11px;cursor:pointer;border:1.5px solid transparent;transition:transform .2s var(--ease),box-shadow .2s,background .2s,color .2s}
+  .btn svg{width:18px;height:18px}
+  .btn-gold{background:var(--gold);color:var(--ink)}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(233,162,59,.35)}
+  .btn-dark{background:var(--ink);color:#fff}
+  .btn-dark:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.28)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+  .btn-ghost-d{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost-d:hover{border-color:var(--gold);color:var(--gold-deep)}
+
+  /* ---- nav ---- */
+  header{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:"Sora",sans-serif;font-weight:800;font-size:20px;color:var(--ink)}
+  .brand .mark{width:34px;height:34px}
+  .nav-links{display:flex;align-items:center;gap:30px}
+  .nav-links a.l{font-family:"Sora",sans-serif;font-weight:500;font-size:14.5px;color:var(--slate)}
+  .nav-links a.l:hover{color:var(--gold-deep)}
+  .back{font-size:13.5px;color:var(--muted);font-weight:500}
+  .back:hover{color:var(--gold-deep)}
+
+  /* ---- hero ---- */
+  .hero{background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(180deg,#16273A 0%,#0C1825 100%);background-size:54px 54px,54px 54px,100% 100%;color:#fff;position:relative;overflow:hidden}
+  .hero .wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:54px;align-items:center;padding:76px 24px 84px}
+  .hero .eyebrow{color:var(--gold)}
+  .hero h1{color:#fff;font-size:clamp(32px,4.4vw,50px);font-weight:800;margin:18px 0 20px;letter-spacing:-.03em}
+  .hero h1 span{color:var(--gold)}
+  .hero p.sub{font-size:18px;color:#C2D2DE;max-width:480px;margin-bottom:30px}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+  .hero-trust{margin-top:26px;font-size:13px;color:#8DA1B2;display:flex;align-items:center;gap:10px}
+  .hero-trust svg{width:16px;height:16px;color:var(--gold)}
+
+  /* ---- app mockup ---- */
+  .appwin{background:#fff;border-radius:14px;box-shadow:var(--shadow-lg);overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+  .appbar{display:flex;align-items:center;gap:8px;padding:11px 14px;background:#0B1622;border-bottom:1px solid var(--line-dark)}
+  .appbar .dot{width:11px;height:11px;border-radius:50%}
+  .appbar .t{margin-left:12px;font-family:"Space Mono",monospace;font-size:11.5px;color:#7C90A2;letter-spacing:.02em}
+  .appbody{display:grid;grid-template-columns:148px 1fr;min-height:330px;background:#F7FAFC}
+  .appside{background:#0E2236;padding:16px 12px;display:flex;flex-direction:column;gap:5px}
+  .appside .sb{font-family:"Sora",sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;color:#5C6E7E;margin:4px 8px 8px}
+  .appside .nv{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;font-size:12.5px;color:#AFC0CE;font-weight:500}
+  .appside .nv svg{width:15px;height:15px;color:#7C90A2}
+  .appside .nv.on{background:rgba(233,162,59,.14);color:#fff}
+  .appside .nv.on svg{color:var(--gold)}
+  .appmain{padding:18px 18px 20px}
+  .apphead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .apphead h5{font-family:"Sora",sans-serif;font-size:14px;color:var(--ink);font-weight:700}
+  .apphead .pill{font-size:10px;font-family:"Space Mono",monospace;color:var(--gold-deep);background:var(--gold-soft);padding:4px 10px;border-radius:999px;font-weight:700}
+  .statrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .scard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+  .scard .v{font-family:"Sora",sans-serif;font-weight:800;font-size:18px;color:var(--ink)}
+  .scard .v b{color:var(--gold-deep)}
+  .scard .k{font-size:9.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:1px}
+  .mockgrid{display:grid;grid-template-columns:1fr 118px;gap:12px}
+  .tbl{background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .tbl .tr{display:grid;grid-template-columns:1.1fr 1fr auto;gap:8px;padding:8px 11px;font-size:11px;align-items:center;border-bottom:1px solid var(--line)}
+  .tbl .tr:last-child{border-bottom:none}
+  .tbl .th{background:#F2F6FA;font-family:"Space Mono",monospace;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .tbl .id{font-family:"Space Mono",monospace;color:var(--ink);font-weight:700}
+  .tbl .ds{color:var(--slate)}
+  .bdg{font-size:9px;font-weight:700;padding:3px 8px;border-radius:999px;text-align:center;white-space:nowrap}
+  .bdg.ok{background:rgba(46,158,107,.13);color:#1F7A50}
+  .bdg.wa{background:rgba(233,162,59,.16);color:var(--gold-deep)}
+  .qrcell{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px}
+  .qrcell .qr{width:84px;height:84px}
+  .qrcell .lab{font-family:"Space Mono",monospace;font-size:9px;color:var(--ink);font-weight:700}
+  .qrcell .cap{font-size:8.5px;color:var(--muted);text-align:center}
+
+  /* ---- sections ---- */
+  .sec{padding:84px 0}
+  .sec.alt{background:var(--paper-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .head{text-align:center;max-width:680px;margin:0 auto 50px}
+  .head h2{font-size:clamp(28px,3.6vw,42px);font-weight:800;margin:16px 0 14px}
+  .head p{font-size:17px;color:var(--muted)}
+
+  .value{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+  .value h2{font-size:clamp(26px,3.2vw,36px);font-weight:800;margin:16px 0 16px}
+  .value p{font-size:16.5px;color:var(--slate);margin-bottom:14px}
+  .value .vlist{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:6px}
+  .value .vlist li{display:flex;gap:12px;align-items:flex-start;font-size:15px;color:var(--slate);font-weight:500}
+  .value .vlist svg{flex:none;width:20px;height:20px;color:var(--ok);margin-top:1px}
+
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .feat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px 26px;transition:transform .3s var(--ease),box-shadow .3s,border-color .3s}
+  .feat:hover{transform:translateY(-5px);box-shadow:var(--shadow-md);border-color:#D6E0EA}
+  .feat .fic{width:50px;height:50px;border-radius:13px;background:var(--gold-soft);color:var(--gold-deep);display:grid;place-items:center;margin-bottom:18px}
+  .feat .fic svg{width:25px;height:25px}
+  .feat h3{font-size:18.5px;font-weight:700;margin-bottom:8px}
+  .feat p{font-size:14.8px;color:var(--muted)}
+
+  /* interface shots */
+  .shots{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch;margin-top:8px}
+  .shot{background:#0E2236;border-radius:16px;padding:22px;box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+  .shot h4{color:#fff;font-size:16px;margin-bottom:4px}
+  .shot p{color:#9FB2C2;font-size:13px;margin-bottom:18px}
+  .panel{background:#fff;border-radius:11px;padding:16px}
+  .tagcard{display:flex;gap:16px;align-items:center}
+  .tagcard .qr{width:96px;height:96px;flex:none}
+  .tagcard .meta b{font-family:"Space Mono",monospace;font-size:13px;color:var(--ink);display:block}
+  .tagcard .meta span{font-size:12px;color:var(--muted);display:block;margin-top:3px}
+  .tagcard .meta .tag{display:inline-block;margin-top:8px;font-size:9.5px;font-weight:700;color:#1F7A50;background:rgba(46,158,107,.13);padding:4px 10px;border-radius:999px}
+  .vcheck{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .vcheck li{display:flex;align-items:center;gap:11px;font-size:13.5px;color:var(--slate)}
+  .vcheck li .ck{width:20px;height:20px;border-radius:50%;background:var(--ok);display:grid;place-items:center;flex:none}
+  .vcheck li .ck svg{width:12px;height:12px;color:#fff}
+  .vcheck li .ck.w{background:var(--gold)}
+  .prog{margin-top:16px}
+  .prog .bar{height:8px;border-radius:999px;background:#EAF0F5;overflow:hidden}
+  .prog .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-deep))}
+  .prog .pl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px;font-family:"Space Mono",monospace}
+
+  /* use cases */
+  .uc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .uc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+  .uc .uic{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--gold);color:var(--gold-deep);display:grid;place-items:center;margin-bottom:14px}
+  .uc .uic svg{width:20px;height:20px}
+  .uc h4{font-size:16px;margin-bottom:7px}
+  .uc p{font-size:13.6px;color:var(--muted)}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:st}
+  .step{position:relative;padding-top:8px}
+  .step .n{width:44px;height:44px;border-radius:12px;background:var(--ink);color:var(--gold);font-family:"Sora",sans-serif;font-weight:800;font-size:18px;display:grid;place-items:center;margin-bottom:16px}
+  .step h4{font-size:16.5px;margin-bottom:7px}
+  .step p{font-size:14px;color:var(--muted)}
+
+  /* cta + guide */
+  .cta{background:linear-gradient(135deg,#0E2236,#16304A);border-radius:24px;padding:54px;text-align:center;position:relative;overflow:hidden}
+  .cta::before{content:"";position:absolute;top:-60px;right:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(233,162,59,.16),transparent 70%)}
+  .cta h2{color:#fff;font-size:clamp(26px,3.2vw,38px);font-weight:800;margin-bottom:14px;position:relative}
+  .cta p{color:#C2D2DE;font-size:17px;max-width:560px;margin:0 auto 28px;position:relative}
+  .cta .hero-cta{justify-content:center;position:relative}
+
+  .guide{display:grid;grid-template-columns:1.05fr 1fr;gap:46px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:22px;padding:42px;box-shadow:var(--shadow-sm)}
+  .guide h3{font-size:25px;font-weight:800;margin:12px 0 12px}
+  .guide p{font-size:15.5px;color:var(--slate);margin-bottom:20px}
+  .gcover{background:linear-gradient(160deg,#0E2236,#16304A);border-radius:14px;padding:30px 26px;color:#fff;text-align:center;box-shadow:var(--shadow-md)}
+  .gcover .mk{width:48px;height:48px;margin:0 auto 14px}
+  .gcover .et{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-family:"Space Mono",monospace;font-weight:700}
+  .gcover h4{color:#fff;font-size:21px;margin:8px 0 6px}
+  .gcover small{color:#9FB2C2;font-size:12.5px}
+
+  /* footer */
+  footer{background:var(--ink);color:#9FB2C2;padding:54px 0 30px;margin-top:4px}
+  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:center}
+  .foot .brand{color:#fff}
+  .foot .fl{display:flex;gap:26px;flex-wrap:wrap}
+  .foot .fl a{font-size:14px;color:#9FB2C2}
+  .foot .fl a:hover{color:var(--gold)}
+  .foot-bot{margin-top:30px;padding-top:22px;border-top:1px solid var(--line-dark);font-size:13px;color:#7C90A2;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+
+  @media(max-width:980px){
+    .hero .wrap,.value,.guide{grid-template-columns:1fr;gap:36px}
+    .feat-grid{grid-template-columns:1fr 1fr}
+    .uc-grid,.steps{grid-template-columns:1fr 1fr}
+    .shots{grid-template-columns:1fr}
+    .nav-links .l{display:none}
+  }
+  @media(max-width:560px){
+    .feat-grid,.uc-grid,.steps{grid-template-columns:1fr}
+    .statrow{grid-template-columns:1fr 1fr}
+    .cta,.guide{padding:30px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>
+      Assetnixa
+    </a>
+    <nav class="nav-links">
+      <a class="l" href="#features">Features</a>
+      <a class="l" href="#interface">Interface</a>
+      <a class="l" href="#usecases">Use cases</a>
+      <a class="back" href="index.html">← Back to main site</a>
+      <a class="btn btn-dark" href="index.html#contact">Book a discovery call</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">Digital Tools · Asset Tagging Toolkit</span>
+      <h1>Identify every asset. <span>Build operational readiness</span> from day one.</h1>
+      <p class="sub">A purpose-built toolkit for infrastructure asset identification — tag assets to a consistent standard, generate scannable QR codes, validate data as you go, and hand over a register your operator can actually use.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="index.html#contact">Talk to our team</a>
+        <a class="btn btn-ghost" href="assetnixa-asset-tagging-guide.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download the guide
+        </a>
+      </div>
+      <div class="hero-trust"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="M9 12l2 2 4-4"/></svg> Built on 98.35% handover-accuracy delivery experience</div>
+    </div>
+    <div>
+      <div class="appwin">
+        <div class="appbar"><span class="dot" style="background:#ED6A5E"></span><span class="dot" style="background:#F4BE4F"></span><span class="dot" style="background:#61C554"></span><span class="t">Asset Tagging Toolkit — Rail Corridor Package</span></div>
+        <div class="appbody">
+          <aside class="appside">
+            <div class="sb">Toolkit</div>
+            <div class="nv on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</div>
+            <div class="nv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4Z"/><path d="M3 17l9 4 9-4M3 12l9 4 9-4"/></svg>Assets</div>
+            <div class="nv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="8" cy="8" r="1.3"/></svg>Tags &amp; QR</div>
+            <div class="nv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14.01l-3-3"/></svg>Validation</div>
+            <div class="nv"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-4.5-8-11a8 8 0 0 1 16 0c0 6.5-8 11-8 11Z"/><circle cx="12" cy="10" r="3"/></svg>GIS Map</div>
+          </aside>
+          <main class="appmain">
+            <div class="apphead"><h5>Tagging Dashboard</h5><span class="pill">PACKAGE: RC-07</span></div>
+            <div class="statrow">
+              <div class="scard"><div class="v">2,418</div><div class="k">Assets tagged</div></div>
+              <div class="scard"><div class="v"><b>96%</b></div><div class="k">Validated</div></div>
+              <div class="scard"><div class="v">112</div><div class="k">Pending review</div></div>
+            </div>
+            <div class="mockgrid">
+              <div class="tbl">
+                <div class="tr th"><span>Asset ID</span><span>Description</span><span>Status</span></div>
+                <div class="tr"><span class="id">RC07-SIG-0412</span><span class="ds">Signal head</span><span class="bdg ok">Validated</span></div>
+                <div class="tr"><span class="id">RC07-TRK-1180</span><span class="ds">Track circuit</span><span class="bdg ok">Validated</span></div>
+                <div class="tr"><span class="id">RC07-OHL-0233</span><span class="ds">OHL mast</span><span class="bdg wa">Review</span></div>
+                <div class="tr"><span class="id">RC07-DRN-0907</span><span class="ds">Drainage pit</span><span class="bdg ok">Validated</span></div>
+              </div>
+              <div class="qrcell"><div class="qr"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><rect x="0" y="0" width="100" height="100" rx="6" fill="#FFFFFF"/><rect x="6.00" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="35.33" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="35.33" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="35.33" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="89.81" width="4.49" height="4.49" fill="#0E2236"/></svg></div><div class="lab">RC07-SIG-0412</div><div class="cap">Scan-ready tag</div></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section class="sec">
+  <div class="wrap value">
+    <div>
+      <span class="eyebrow">The business value</span>
+      <h2>A tag is small. Getting it wrong is expensive.</h2>
+      <p>On major infrastructure projects, asset identification is the foundation everything else is built on — the register, maintenance, inspections, GIS and the handover to operations. When tagging is inconsistent or incomplete, the cost compounds into duplicated records, unscannable labels and assets nobody can find.</p>
+      <p>The Asset Tagging Toolkit gives delivery and operations teams one consistent, controlled way to identify, code, validate and hand over assets — so the data is right the first time.</p>
+    </div>
+    <ul class="vlist">
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>One enforced tagging standard across every team and discipline</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Scannable QR / barcode tags linked to the asset record</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Errors caught at the point of capture, not after handover</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Clean, structured export that loads into the operator's systems</li>
+      <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Live coverage and readiness visibility for project leaders</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec alt" id="features">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">What it does</span>
+      <h2>Everything you need to identify assets — in one place</h2>
+      <p>From the first tag to a handover-ready register, the toolkit covers the full identification workflow.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="8" cy="8" r="1.4"/></svg></div><h3>Standardised tagging</h3><p>Apply a consistent asset hierarchy, naming and numbering convention across every package and discipline.</p></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 21v.01M17 21h.01M21 17h.01"/></svg></div><h3>QR &amp; barcode generation</h3><p>Generate durable, scan-ready labels that link straight back to each asset's record and documents.</p></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.1V12a10 10 0 1 1-5.9-9.1"/><path d="M22 4 12 14.01l-3-3"/></svg></div><h3>Built-in validation</h3><p>Automatic checks for uniqueness, completeness, format and referential integrity — flagged the moment they occur.</p></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-8-4.5-8-11a8 8 0 0 1 16 0c0 6.5-8 11-8 11Z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>GIS integration</h3><p>Capture coordinates with every tag so assets are findable in GIS and on the ground, not just in a spreadsheet.</p></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 3 5-7"/></svg></div><h3>Coverage tracking</h3><p>Live dashboards show tagging progress, validation status and readiness — by package, system or area.</p></div>
+      <div class="feat"><div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></div><h3>Handover-ready export</h3><p>Export clean, structured data mapped to your operator's CMMS, EAM or GIS — ready to load without rework.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERFACE -->
+<section class="sec" id="interface">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">A modern interface</span>
+      <h2>Designed for the field and the office</h2>
+      <p>A clean, SaaS-style workspace — not a spreadsheet on a webpage. Clear status, fast tagging, and validation you can see.</p>
+    </div>
+    <div class="shots">
+      <div class="shot">
+        <h4>Tag &amp; QR generation</h4>
+        <p>Each asset gets a unique ID and a scan-ready code, linked to its full record.</p>
+        <div class="panel">
+          <div class="tagcard">
+            <div class="qr"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block"><rect x="0" y="0" width="100" height="100" rx="6" fill="#FFFFFF"/><rect x="6.00" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="6.00" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="10.19" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="14.38" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="18.57" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="22.76" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="26.95" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="31.14" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="35.33" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="35.33" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="39.52" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="43.71" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="35.33" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="47.90" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="52.10" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="56.29" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="60.48" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="64.67" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="68.86" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="73.05" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="43.71" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="77.24" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="52.10" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="68.86" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="81.43" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="89.81" y="81.43" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="39.52" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="64.67" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="85.62" width="4.49" height="4.49" fill="#0E2236"/><rect x="6.00" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="10.19" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="14.38" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="18.57" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="22.76" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="26.95" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="31.14" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="47.90" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="56.29" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="60.48" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="73.05" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="77.24" y="89.81" width="4.49" height="4.49" fill="#0E2236"/><rect x="85.62" y="89.81" width="4.49" height="4.49" fill="#0E2236"/></svg></div>
+            <div class="meta">
+              <b>RC07-SIG-0412</b>
+              <span>Signal head · Up main</span>
+              <span>System: Signalling</span>
+              <span class="tag">Linked &amp; validated</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="shot">
+        <h4>Validation &amp; readiness</h4>
+        <p>Every tag is checked as it's created — gaps and duplicates surface immediately.</p>
+        <div class="panel">
+          <ul class="vcheck">
+            <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Unique asset ID confirmed</li>
+            <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Required attributes complete</li>
+            <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>Location captured (GIS)</li>
+            <li><span class="ck w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4M12 16h.01"/></svg></span>Parent system pending review</li>
+          </ul>
+          <div class="prog">
+            <div class="pl"><span>Package readiness</span><span>96%</span></div>
+            <div class="bar"><i style="width:96%"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="sec alt" id="usecases">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Where it fits</span>
+      <h2>Built for complex, asset-heavy projects</h2>
+      <p>Wherever thousands of assets need a reliable identity, the toolkit keeps tagging consistent and traceable.</p>
+    </div>
+    <div class="uc-grid">
+      <div class="uc"><div class="uic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16M8 21l2-4M16 21l-2-4"/></svg></div><h4>Rail &amp; transport</h4><p>Signalling, track, OHL and station assets tagged to one corridor-wide standard.</p></div>
+      <div class="uc"><div class="uic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg></div><h4>Utilities &amp; energy</h4><p>Network and plant assets identified and located for inspection and maintenance.</p></div>
+      <div class="uc"><div class="uic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20M4 20V8l6-4 6 4M14 20V11l4-2 2 2v9"/></svg></div><h4>Capital projects</h4><p>Progressive tagging across packages, with live coverage for project controls.</p></div>
+      <div class="uc"><div class="uic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4M7.8 16.2a6 6 0 0 1 0-8.4M19 5a10 10 0 0 1 0 14M5 19A10 10 0 0 1 5 5"/></svg></div><h4>Telecommunications</h4><p>Distributed network assets given a consistent, scannable identity in the field.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">How it works</span>
+      <h2>From standard to handover, in four steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h4>Define the standard</h4><p>Set the asset hierarchy, naming and numbering convention once, and govern it centrally.</p></div>
+      <div class="step"><div class="n">2</div><h4>Tag &amp; generate codes</h4><p>Capture assets, assign unique IDs and produce scan-ready QR or barcode labels.</p></div>
+      <div class="step"><div class="n">3</div><h4>Validate &amp; locate</h4><p>Run continuous checks and capture GIS coordinates so every asset is findable and correct.</p></div>
+      <div class="step"><div class="n">4</div><h4>Export for handover</h4><p>Hand over a clean, structured register mapped to the operator's systems — ready to load.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE DOWNLOAD -->
+<section class="sec alt">
+  <div class="wrap">
+    <div class="guide">
+      <div>
+        <span class="eyebrow">Free guide</span>
+        <h3>Asset Tagging &amp; Identification — a practical field guide</h3>
+        <p>Eight practices that separate tagging that lasts from tagging that has to be redone — covering standards, durable labels, validation, GIS and handover. A quick, practical read for delivery and operations teams.</p>
+        <a class="btn btn-gold" href="assetnixa-asset-tagging-guide.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Download the PDF
+        </a>
+      </div>
+      <div class="gcover">
+        <svg class="mk" viewBox="0 0 40 40" fill="none"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>
+        <div class="et">Field Guide</div>
+        <h4>Asset Tagging &amp; Identification</h4>
+        <small>8 practices · PDF · free</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec">
+  <div class="wrap">
+    <div class="cta">
+      <h2>Standing up asset tagging on your project?</h2>
+      <p>Our consultants help you design the standard, deploy the toolkit, and load clean data into your operator's systems. Book a free, no-obligation discovery call.</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="index.html#contact">Book a discovery call</a>
+        <a class="btn btn-ghost" href="index.html#capabilities">Explore our services</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <a class="brand" href="index.html">
+        <svg class="mark" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path d="M20 2.5 34.7 11v18L20 37.5 5.3 29V11L20 2.5Z" fill="#0E2236" stroke="#E9A23B" stroke-width="2"/><path d="M14 26 20 13.5 26 26" stroke="#E9A23B" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.2 21.5 23.8 21.5" stroke="#E9A23B" stroke-width="1.9" stroke-linecap="round"/><circle cx="20" cy="13.5" r="2.5" fill="#E9A23B"/><circle cx="14" cy="26" r="2.5" fill="#E9A23B"/><circle cx="26" cy="26" r="2.5" fill="#E9A23B"/></svg>
+        Assetnixa
+      </a>
+      <div class="fl">
+        <a href="index.html">Home</a>
+        <a href="index.html#capabilities">Services</a>
+        <a href="index.html#contact">Contact</a>
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Assetnixa Consulting. All rights reserved.</span>
+      <span>Turning asset data into operational intelligence.</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
